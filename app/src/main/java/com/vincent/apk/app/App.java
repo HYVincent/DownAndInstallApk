@@ -4,6 +4,9 @@ import android.app.Application;
 
 import com.vincent.apk.utils.Utils;
 
+import hugo.weaving.DebugLog;
+import hugo.weaving.internal.Hugo;
+
 /**
  * description ：
  * project name：DownAndInstallApk

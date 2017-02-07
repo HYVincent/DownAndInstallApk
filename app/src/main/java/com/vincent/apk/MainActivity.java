@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -16,6 +17,7 @@ import com.vincent.apk.utils.ToastUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hugo.weaving.DebugLog;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.OnPermissionDenied;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.et_apk_network_address)
     EditText et;
 
+    @DebugLog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,15 +41,20 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
+    @DebugLog
     @OnClick(R.id.btn_click_down_apk)
     public void onClick() {
         MainActivityPermissionsDispatcher.goDwonWithCheck(this);
     }
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void goDwon(){
-        Intent intent = new Intent(MainActivity.this, DownApkService.class);
-        intent.putExtra("downApkUrl", et.getText().toString().trim());
-        startService(intent);
+        if(TextUtils.isEmpty(et.getText().toString().trim())){
+            ToastUtils.showLongToast("尚未输入");
+        }else {
+            Intent intent = new Intent(MainActivity.this, DownApkService.class);
+            intent.putExtra("downApkUrl", et.getText().toString().trim());
+            startService(intent);
+        }
     }
     @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void showRationaleForCamera(PermissionRequest request) {
